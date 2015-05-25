@@ -1,0 +1,43 @@
+{
+    "last_update": "2013-05-27T17:56:50+02:00",
+    "count": 1,
+    "events": [
+        {
+            "id": "19988",
+            "title": "Inscription NODE 2012/2013",
+            "site_url": "http://bxno.de",
+            "description": "\\u003Cp\\u003E\\r\\n\\t\\u003Cstrong\\u003ECette inscription donne acc\\u00e8s au NODE jusqu\\u0026\#39au 31 d\\u00e9cembre 2013.\\u003C/strong\\u003E\\u003C/p\\u003E\\r\\n\\u003Cp\\u003E\\r\\n\\t\\u003Cem\\u003E(les appels \\u00e0 cotisation pour 2014 seront lanc\\u00e9 le 1er juillet 2013.)\\u003C/em\\u003E\\u003C/p\\u003E\\r\\n",
+            "image": "",
+            "category": {
+                "id": "38",
+                "name": "Dons en ligne"
+            },
+            "period": {
+                "start": "2012-07-20 00:00:00",
+                "end": "2013-06-30 23:55:59"
+            },
+            "price": {
+                "min": "0.00",
+                "max": "1000.00"
+            },
+            "venue": {
+                "name": "",
+                "address": "",
+                "zip_code": "",
+                "city": "",
+                "state": "",
+                "country": {
+                    "code": null,
+                    "name": null
+                },
+                "coordinates": {
+                    "long": "0.0000000",
+                    "lat": "0.0000000"
+                }
+            },
+            "extras": {
+                "minisite_url": "http://weezevent.dev/inscription-node-2012-2013"
+            }
+        }
+    ]
+}

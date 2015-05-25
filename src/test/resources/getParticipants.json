@@ -1,0 +1,59 @@
+{
+    "participants": [
+        {
+            "id_participant": 7759645,
+            "id_event": 49015,
+            "id_date": 0,
+            "id_ticket": "198251",
+            "barcode": "7448370",
+            "id_weez_ticket": "T6E49015O5822",
+            "deleted": "0",
+            "comment": "",
+            "create_date": "2014-01-23 12:41:55",
+            "origin": "saisir",
+            "id_transaction": 2029446,
+            "control_status": {
+                "status": "0",
+                "scan_date": "0000-00-00 00:00:00",
+                "scan_user": "0",
+                "scan_user_name": ""
+            },
+            "owner": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "comment": "",
+                "custom_field": "",
+                "origin": "saisir"
+            }
+        },
+        {
+            "id_participant": 7759646,
+            "id_event": 49015,
+            "id_date": 0,
+            "id_ticket": "198251",
+            "barcode": "7448371",
+            "id_weez_ticket": "T7E49015O5822",
+            "deleted": "0",
+            "comment": "",
+            "create_date": "2014-01-23 12:41:55",
+            "origin": "saisir",
+            "id_transaction": 2029446,
+            "control_status": {
+                "status": "0",
+                "scan_date": "0000-00-00 00:00:00",
+                "scan_user": "0",
+                "scan_user_name": ""
+            },
+            "owner": {
+                "first_name": "",
+                "last_name": "",
+                "email": "",
+                "comment": "",
+                "custom_field": "",
+                "origin": "saisir"
+            }
+        }
+    ],
+    "server_time": "2014-01-23 12:52:19"
+}

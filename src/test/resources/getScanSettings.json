@@ -1,0 +1,11 @@
+{
+    "settings": {
+        "test": "test",
+        "sync_interval": "120",
+        "scan_device": "",
+        "scan_focus": "0",
+        "scan_mode": "0",
+        "scan_vibration": "0",
+        "scan_sound": "0"
+    }
+}
