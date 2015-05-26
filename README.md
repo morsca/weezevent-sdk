@@ -1,13 +1,13 @@
 # weezevent-sdk
 
 Weezevent Java SDK Client is a Java helper tool to communicate with [Weezevent API](https://api.weezevent.com), 
-wich gives access to basic functionalities of the Weezevent Ticketing solution.
+which gives access to basic functionalities of the Weezevent Ticketing solution.
 
 This project is based on :
 * Jackson 2.5.3
-* Apache HttpClient 4.4.1
+* Apache HttpClient 4.4.1 (or Spring RestTemplate)
 
-# compile
+## compile
 
 The project uses Maven.
 
@@ -15,7 +15,21 @@ The project uses Maven.
 $ mvn install
 ```
 
-# basic usage
+## dependency
+
+Add the Maven dependency in your pom.xml file :
+
+```xml
+<dependency>
+	<groupId>com.morsca.weezevent</groupId>
+	<artifactId>weezevent-sdk</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+</dependency>
+```
+
+## samples
+
+### authentication
 
 ```java
 WeezeventClient client = WeezeventClient.getWeezeventClient("<your API key>");
@@ -23,4 +37,109 @@ WeezeventService service = client.login("username", "password"); //service conta
 WeezeventEventsResponse eventsResponse = service.getEvents();
 //do some stuff...
 client.close();
+```
+
+### Example request by id_event, full data.
+
+```java
+//...
+WeezeventParticipantsRequest weezeventParticipantsRequest = new WeezeventParticipantsRequest();
+weezeventParticipantsRequest.setEventIds(Arrays.asList(11122L, 112331L));
+weezeventParticipantsRequest.setFull(true);
+
+WeezeventParticipantsResponse participantsResponse = service.getParticipants(weezeventParticipantsRequest);
+//do some stuff...
+```
+
+### Example request by id_ticket.
+
+```java
+//...
+WeezeventParticipantsRequest weezeventParticipantsRequest = new WeezeventParticipantsRequest();
+weezeventParticipantsRequest.setTicketIds(Arrays.asList(1121223L));
+
+WeezeventParticipantsResponse participantsResponse = service.getParticipants(weezeventParticipantsRequest);
+//do some stuff...
+```
+
+### Example request by date_ticket.
+
+```java
+//...
+HashMap<Long, Long> dateIdTicketId = new HashMap<Long, Long>();
+dateIdTicketId.put(138L, 44272L);
+dateIdTicketId.put(138L, 44274L);
+WeezeventParticipantsRequest weezeventParticipantsRequest = new WeezeventParticipantsRequest();
+weezeventParticipantsRequest.setDateIdTicketId(dateIdTicketId);
+
+WeezeventParticipantsResponse participantsResponse = service.getParticipants(weezeventParticipantsRequest);
+//do some stuff...
+```
+
+### Example request by date_ticket and id_ticket.
+
+```java
+//...
+HashMap<Long, Long> dateIdTicketId = new HashMap<Long, Long>();
+dateIdTicketId.put(138L, 44272L);
+dateIdTicketId.put(138L, 44274L);
+WeezeventParticipantsRequest weezeventParticipantsRequest = new WeezeventParticipantsRequest();
+weezeventParticipantsRequest.setDateIdTicketId(dateIdTicketId);
+weezeventParticipantsRequest.setTicketIds(Arrays.asList(1121223L));
+
+WeezeventParticipantsResponse participantsResponse = service.getParticipants(weezeventParticipantsRequest);
+//do some stuff...
+```
+
+# how to use Spring RestTemplate
+
+For integration with Spring Framework, it is also possible to use Spring RestTemplate instead of Apache HttpClient.
+First, fetch the project weezevent-sdk-spring-rest-template.
+
+## compile
+
+Compile the project with Maven :
+
+```shell
+$ mvn install
+```
+
+## dependency
+
+Add the Maven dependency in your pom.xml file :
+
+```xml
+<dependency>
+	<groupId>com.morsca.weezevent</groupId>
+	<artifactId>weezevent-sdk-spring-rest-template</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+</dependency>
+```
+
+## usage
+
+For default Spring RestTemplate, simply create a new WeezeventRestTemplateClient instance :
+
+```java
+WeezeventClient client = WeezeventClient.getWeezeventClient();
+client.setWeezeventHttpClient(new WeezeventRestTemplateClient());
+//do some stuff...
+```
+
+Otherwise, you can use an existing instance of RestTemplate :
+
+```java
+@Autowired
+private RestTemplate restTemplate;
+...
+WeezeventClient client = WeezeventClient.getWeezeventClient();
+client.setWeezeventHttpClient(new WeezeventRestTemplateClient(restTemplate));
+//do some stuff...
+```
+
+However, used mapper must be configured as following :
+
+```java
+objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
+objectMapper.configure(Feature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER, true);
 ```

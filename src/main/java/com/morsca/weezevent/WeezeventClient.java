@@ -1,21 +1,16 @@
 package com.morsca.weezevent;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.morsca.weezevent.exception.WeezeventException;
 import com.morsca.weezevent.http.WeezeventApacheHttpClient;
 import com.morsca.weezevent.http.WeezeventHttpClient;
-import com.morsca.weezevent.mapper.WeezeventMapperFactory;
 import com.morsca.weezevent.response.WeezeventAuthAccessTokenResponse;
 
 public class WeezeventClient {
 
 	public final static String DEFAULT_WEEZEVENT_URL = "https://api.weezevent.com";
-	
-	private ObjectMapper objectMapper = WeezeventMapperFactory.getWeezeventMapper();
 	
 	private WeezeventHttpClient weezeventHttpClient = new WeezeventApacheHttpClient();
 	
@@ -25,7 +20,7 @@ public class WeezeventClient {
 	
 	private String accessToken;
 	
-	private WeezeventClient() {}
+	protected WeezeventClient() {}
 	
 	public String getUrl() {
 		return url;
@@ -37,14 +32,6 @@ public class WeezeventClient {
 
 	public String getAccessToken() {
 		return accessToken;
-	}
-
-	public ObjectMapper getObjectMapper() {
-		return objectMapper;
-	}
-
-	public void setObjectMapper(ObjectMapper objectMapper) {
-		this.objectMapper = objectMapper;
 	}
 
 	public WeezeventHttpClient getWeezeventHttpClient() {
@@ -59,8 +46,8 @@ public class WeezeventClient {
 		return new WeezeventService(this);
 	}
 
-	public WeezeventService login(final String username, final String password) {
-		HashMap<String, Object> params = new HashMap<String, Object>();
+	public WeezeventService login(final String username, final String password) throws WeezeventException {
+		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("username", username);
 		params.put("password", password);
 		params.put("api_key", apiKey);
@@ -74,14 +61,9 @@ public class WeezeventClient {
 		accessToken = null;
 	}
 	
-	public void close() {
+	public void close() throws WeezeventException {
 		logout();
-		
-		try {
-			weezeventHttpClient.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		weezeventHttpClient.close();
 	}
 	
 	public static WeezeventClient getWeezeventClient() {
@@ -99,44 +81,24 @@ public class WeezeventClient {
 		return weezeventClient;
 	}
 	
-	public <T> T getAnonymously(final String path, Class<T> clazz) {
-		try {
-			InputStream is = weezeventHttpClient.get(url + path);
-			return objectMapper.readValue(is, clazz);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+	public <T> T getAnonymously(final String path, Class<T> clazz) throws WeezeventException {
+		return weezeventHttpClient.get(url + path, clazz);
 	}
 	
-	public <T> T get(final String path, Class<T> clazz) {
-		return get(path, new HashMap<String, Object>(), clazz);
+	public <T> T get(final String path, Class<T> clazz) throws WeezeventException {
+		return get(path, new HashMap<String, String>(), clazz);
 	}
 	
-	public <T> T get(final String path, final Map<String, Object> params, Class<T> clazz) {
+	public <T> T get(final String path, final Map<String, String> params, Class<T> clazz) throws WeezeventException {
 		params.put("access_token", accessToken);
 		params.put("api_key", apiKey);
-		
-		try {
-			InputStream is = weezeventHttpClient.get(url + path, params);
-			return objectMapper.readValue(is, clazz);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+		return weezeventHttpClient.get(url + path, params, clazz);
 	}
 	
-	public <T> T post(final String path, final Map<String, Object> params, Class<T> clazz) {
+	public <T> T post(final String path, final Map<String, String> params, Class<T> clazz) throws WeezeventException {
 		params.put("access_token", accessToken);
 		params.put("api_key", apiKey);
-		
-		try {
-			InputStream is = weezeventHttpClient.post(url + path, params);
-			return objectMapper.readValue(is, clazz);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+		return weezeventHttpClient.post(url + path, params, clazz);
 	}
 
 }
