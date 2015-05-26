@@ -1,17 +1,17 @@
 package com.morsca.weezevent.http;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 
-public interface WeezeventHttpClient {
+import com.morsca.weezevent.exception.WeezeventException;
 
-	public abstract InputStream get(final String url) throws IOException;
+public interface WeezeventHttpClient {
 	
-	public abstract InputStream get(final String url, final Map<String, Object> params) throws IOException;
+	public abstract <T> T get(final String url, Class<T> clazz) throws WeezeventException;
 	
-	public abstract InputStream post(final String url, final Map<String, Object> params) throws IOException;
+	public abstract <T> T get(final String url, final Map<String, String> params, Class<T> clazz) throws WeezeventException;
 	
-	public abstract void close() throws IOException;
+	public abstract <T> T post(final String url, final Map<String, String> params, Class<T> clazz) throws WeezeventException;
+	
+	public abstract void close() throws WeezeventException;
 	
 }

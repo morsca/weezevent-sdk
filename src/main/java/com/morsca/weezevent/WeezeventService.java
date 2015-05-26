@@ -4,8 +4,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import com.morsca.weezevent.domain.WeezeventScanSettings;
+import com.morsca.weezevent.exception.WeezeventException;
 import com.morsca.weezevent.request.WeezeventEventRequest;
 import com.morsca.weezevent.request.WeezeventEventSearchRequest;
 import com.morsca.weezevent.request.WeezeventParticipantsRequest;
@@ -34,8 +36,9 @@ public class WeezeventService {
 	 * By default, only published events with at least one participant will be returned.
 	 * 
 	 * @return WeezeventEventsResponse
+	 * @throws WeezeventException 
 	 */
-	public WeezeventEventsResponse getEvents() {
+	public WeezeventEventsResponse getEvents() throws WeezeventException {
 		return weezeventClient.get("/events", WeezeventEventsResponse.class);
 	}
 	
@@ -45,12 +48,13 @@ public class WeezeventService {
 	 * 
 	 * @param weezeventEventRequest
 	 * @return WeezeventEventsResponse
+	 * @throws WeezeventException 
 	 */
-	public WeezeventEventsResponse getEvents(final WeezeventEventRequest weezeventEventRequest) {
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		if(weezeventEventRequest.getIncludeNotPublished() != null) { params.put("include_not_published", weezeventEventRequest.getIncludeNotPublished()); }
-		if(weezeventEventRequest.getIncludeClosed() != null) { params.put("include_closed", weezeventEventRequest.getIncludeClosed()); }
-		if(weezeventEventRequest.getIncludeWithoutSales() != null) { params.put("include_without_sales", weezeventEventRequest.getIncludeWithoutSales()); }
+	public WeezeventEventsResponse getEvents(final WeezeventEventRequest weezeventEventRequest) throws WeezeventException {
+		HashMap<String, String> params = new HashMap<String, String>();
+		if(weezeventEventRequest.getIncludeNotPublished() != null) { params.put("include_not_published", Boolean.toString(weezeventEventRequest.getIncludeNotPublished())); }
+		if(weezeventEventRequest.getIncludeClosed() != null) { params.put("include_closed", Boolean.toString(weezeventEventRequest.getIncludeClosed())); }
+		if(weezeventEventRequest.getIncludeWithoutSales() != null) { params.put("include_without_sales", Boolean.toString(weezeventEventRequest.getIncludeWithoutSales())); }
 		return weezeventClient.get("/events", params, WeezeventEventsResponse.class);
 	}
 	
@@ -62,9 +66,10 @@ public class WeezeventService {
 	 * 
 	 * @param eventId an event identifier
 	 * @return WeezeventDatesResponse
+	 * @throws WeezeventException 
 	 */
-	public WeezeventDatesResponse getDates(final String eventId) {
-		HashMap<String, Object> params = new HashMap<String, Object>();
+	public WeezeventDatesResponse getDates(final String eventId) throws WeezeventException {
+		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("id_event", eventId);
 		return weezeventClient.get("/dates", params, WeezeventDatesResponse.class);
 	}
@@ -77,9 +82,10 @@ public class WeezeventService {
 	 * 
 	 * @param eventIds a collection of event id
 	 * @return WeezeventDatesResponse
+	 * @throws WeezeventException 
 	 */
-	public WeezeventDatesResponse getDates(final Collection<String> eventIds) {
-		HashMap<String, Object> params = new HashMap<String, Object>();
+	public WeezeventDatesResponse getDates(final Collection<String> eventIds) throws WeezeventException {
+		HashMap<String, String> params = new HashMap<String, String>();
 		for(String eventId : eventIds) {
 			params.put("id_event[]", eventId);
 		}
@@ -95,9 +101,10 @@ public class WeezeventService {
 	 * 
 	 * @param eventId an event identifier
 	 * @return WeezeventEventsResponse
+	 * @throws WeezeventException 
 	 */
-	public WeezeventEventsResponse getTickets(final String eventId) {
-		HashMap<String, Object> params = new HashMap<String, Object>();
+	public WeezeventEventsResponse getTickets(final String eventId) throws WeezeventException {
+		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("id_event", eventId);
 		return weezeventClient.get("/tickets", params, WeezeventEventsResponse.class);
 	}
@@ -111,9 +118,10 @@ public class WeezeventService {
 	 * 
 	 * @param eventId a collection of event identifier
 	 * @return WeezeventEventsResponse
+	 * @throws WeezeventException 
 	 */
-	public WeezeventEventsResponse getTickets(final Collection<String> eventIds) {
-		HashMap<String, Object> params = new HashMap<String, Object>();
+	public WeezeventEventsResponse getTickets(final Collection<String> eventIds) throws WeezeventException {
+		HashMap<String, String> params = new HashMap<String, String>();
 		for(String eventId : eventIds) {
 			params.put("id_event[]", eventId);
 		}
@@ -126,8 +134,9 @@ public class WeezeventService {
 	 * 
 	 * @param ticketId a ticket identifier
 	 * @return WeezeventTicketStatsResponse
+	 * @throws WeezeventException 
 	 */
-	public WeezeventTicketStatsResponse getTicketStats(final long ticketId) {
+	public WeezeventTicketStatsResponse getTicketStats(final long ticketId) throws WeezeventException {
 		return weezeventClient.get("/tickets/" + ticketId + "/stats", WeezeventTicketStatsResponse.class);
 	}
 	
@@ -138,20 +147,33 @@ public class WeezeventService {
 	 * 
 	 * @param weezeventParticipantsRequest
 	 * @return WeezeventParticipantsResponse
+	 * @throws WeezeventException 
 	 */
-	public WeezeventParticipantsResponse getParticipants(final WeezeventParticipantsRequest weezeventParticipantsRequest) {
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		if(weezeventParticipantsRequest.getEventIds() != null) { params.put("id_event", weezeventParticipantsRequest.getEventIds()); }
-		if(weezeventParticipantsRequest.getTicketIds() != null) { params.put("id_ticket", weezeventParticipantsRequest.getTicketIds()); }
-		if(weezeventParticipantsRequest.getDateIdTicketId() != null) { params.put("date_ticket", weezeventParticipantsRequest.getDateIdTicketId()); }
-		if(weezeventParticipantsRequest.getLastUpdate() != null) { params.put("last_update", dateFormat.format(weezeventParticipantsRequest.getLastUpdate())); }
-		if(weezeventParticipantsRequest.getIncludeDeleted() != null) { params.put("include_deleted", weezeventParticipantsRequest.getIncludeDeleted()); }
-		if(weezeventParticipantsRequest.getModeration() != null) { params.put("moderation", weezeventParticipantsRequest.getModeration()); }
-		if(weezeventParticipantsRequest.getIncludeUnpaid() != null) { params.put("include_unpaid", weezeventParticipantsRequest.getIncludeUnpaid()); }
-		if(weezeventParticipantsRequest.getFull() != null) { params.put("full", weezeventParticipantsRequest.getFull()); }
-		if(weezeventParticipantsRequest.getMinimized() != null) { params.put("minimized", weezeventParticipantsRequest.getMinimized()); }
-		if(weezeventParticipantsRequest.getMax() != null) { params.put("max", weezeventParticipantsRequest.getMax()); }
-		if(weezeventParticipantsRequest.getPage() != null) { params.put("page", weezeventParticipantsRequest.getPage()); }
+	public WeezeventParticipantsResponse getParticipants(final WeezeventParticipantsRequest weezeventParticipantsRequest) throws WeezeventException {
+		HashMap<String, String> params = new HashMap<String, String>();
+		if(weezeventParticipantsRequest.getEventIds() != null) {
+			for(Long eventId : weezeventParticipantsRequest.getEventIds()) {
+				params.put("id_event[]", Long.toString(eventId));
+			}
+		}
+		if(weezeventParticipantsRequest.getTicketIds() != null) {
+			for(Long ticketId : weezeventParticipantsRequest.getTicketIds()) {
+				params.put("id_ticket[]", Long.toString(ticketId));
+			}
+		}
+		if(weezeventParticipantsRequest.getDateIdTicketId() != null) {
+			for(Entry<Long, Long> entry : weezeventParticipantsRequest.getDateIdTicketId().entrySet()) {
+				params.put("date_ticket[" + Long.toString(entry.getKey()) + "][]",  Long.toString(entry.getValue()));
+			}
+		}
+		if(weezeventParticipantsRequest.getLastUpdate() != null) {params.put("last_update", dateFormat.format(weezeventParticipantsRequest.getLastUpdate())); }
+		if(weezeventParticipantsRequest.getIncludeDeleted() != null) { params.put("include_deleted", Boolean.toString(weezeventParticipantsRequest.getIncludeDeleted())); }
+		if(weezeventParticipantsRequest.getModeration() != null) { params.put("moderation", Boolean.toString(weezeventParticipantsRequest.getModeration())); }
+		if(weezeventParticipantsRequest.getIncludeUnpaid() != null) { params.put("include_unpaid", Boolean.toString(weezeventParticipantsRequest.getIncludeUnpaid())); }
+		if(weezeventParticipantsRequest.getFull() != null) { params.put("full", Boolean.toString(weezeventParticipantsRequest.getFull())); }
+		if(weezeventParticipantsRequest.getMinimized() != null) { params.put("minimized", Boolean.toString(weezeventParticipantsRequest.getMinimized())); }
+		if(weezeventParticipantsRequest.getMax() != null) { params.put("max", Integer.toString(weezeventParticipantsRequest.getMax())); }
+		if(weezeventParticipantsRequest.getPage() != null) { params.put("page", Integer.toString(weezeventParticipantsRequest.getPage())); }
 		return weezeventClient.get("/participants", params, WeezeventParticipantsResponse.class);
 	}
 	
@@ -161,8 +183,9 @@ public class WeezeventService {
 	 * 
 	 * @param participantId a participant identifier
 	 * @return WeezeventAnswersResponse
+	 * @throws WeezeventException 
 	 */
-	public WeezeventAnswersResponse getAnswers(final long participantId) {
+	public WeezeventAnswersResponse getAnswers(final long participantId) throws WeezeventException {
 		return weezeventClient.get("/participant/" + participantId + "/answers", WeezeventAnswersResponse.class);
 	}
 	
@@ -171,8 +194,9 @@ public class WeezeventService {
 	 * settings of the client application can be stored on the Weezevent server.
 	 * 
 	 * @return WeezeventScanSettings
+	 * @throws WeezeventException 
 	 */
-	public WeezeventScanSettings getScanSettings() {
+	public WeezeventScanSettings getScanSettings() throws WeezeventException {
 		return weezeventClient.get("/scan/settings", WeezeventScanSettings.class);
 	}
 	
@@ -183,9 +207,10 @@ public class WeezeventService {
 	 * 
 	 * @param user Name of the user
 	 * @return WeezeventScanUserResponse
+	 * @throws WeezeventException 
 	 */
-	public WeezeventScanUserResponse postScanUser(final String user) {
-		HashMap<String, Object> params = new HashMap<String, Object>();
+	public WeezeventScanUserResponse postScanUser(final String user) throws WeezeventException {
+		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("user", user);
 		return weezeventClient.post("/scan/settings", params, WeezeventScanUserResponse.class);
 	}
@@ -196,8 +221,9 @@ public class WeezeventService {
 	 * 
 	 * @param eventId an event id
 	 * @return WeezeventEventDetailsResponse
+	 * @throws WeezeventException 
 	 */
-	public WeezeventEventDetailsResponse getEventDetails(final long eventId) {
+	public WeezeventEventDetailsResponse getEventDetails(final long eventId) throws WeezeventException {
 		return weezeventClient.get("/event/" + eventId + "/details", WeezeventEventDetailsResponse.class);
 	}
 	
@@ -207,8 +233,9 @@ public class WeezeventService {
 	 * 
 	 * @param weezeventEventSearchRequest
 	 * @return WeezeventEventSearchResponse
+	 * @throws WeezeventException 
 	 */
-	public WeezeventEventSearchResponse getEventSearch(final WeezeventEventSearchRequest weezeventEventSearchRequest) {
+	public WeezeventEventSearchResponse getEventSearch(final WeezeventEventSearchRequest weezeventEventSearchRequest) throws WeezeventException {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		if(weezeventEventSearchRequest.getDate() != null) { params.put("date", dateFormat.format(weezeventEventSearchRequest.getDate())); }
 		if(weezeventEventSearchRequest.getDateStart() != null) { params.put("date_start", dateFormat.format(weezeventEventSearchRequest.getDateStart())); }
@@ -228,8 +255,9 @@ public class WeezeventService {
 	 * So no need for API key and access token.
 	 * 
 	 * @return WeezeventEventCategoriesResponse
+	 * @throws WeezeventException 
 	 */
-	public WeezeventEventCategoriesResponse getEventCategories() {
+	public WeezeventEventCategoriesResponse getEventCategories() throws WeezeventException {
 		return weezeventClient.getAnonymously("/event/categories/", WeezeventEventCategoriesResponse.class);
 	}
 }

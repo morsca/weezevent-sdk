@@ -8,13 +8,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.morsca.weezevent.util.MockWeezeventHttpClient;
+import com.morsca.weezevent.exception.WeezeventException;
+import com.morsca.weezevent.mock.WeezeventHttpClient;
 
 public class TestWeezeventClient {
 
 	private WeezeventClient weezeventClient;
 	
-	private MockWeezeventHttpClient mockWeezeventHttpClient = new MockWeezeventHttpClient();
+	private WeezeventHttpClient mockWeezeventHttpClient = new WeezeventHttpClient();
 	
 	private final static String API_KEY = "1234ABCD";
 	
@@ -25,12 +26,12 @@ public class TestWeezeventClient {
 	}
 	
 	@After
-	public void after() {
+	public void after() throws WeezeventException {
 		weezeventClient.close();
 	}
 	
 	@Test
-	public void testGetWeezeventClientDoNotLogin() {
+	public void testGetWeezeventClientDoNotLogin() throws WeezeventException {
 		weezeventClient.doNotLogin();
 		
 		Assert.assertNull(mockWeezeventHttpClient.getLastUrl());
@@ -38,7 +39,7 @@ public class TestWeezeventClient {
 	}
 	
 	@Test
-	public void testGetWeezeventClientLogin() {
+	public void testGetWeezeventClientLogin() throws WeezeventException {
 		weezeventClient.login("username", "password");
 		
 		Assert.assertEquals(WeezeventClient.DEFAULT_WEEZEVENT_URL + "/auth/access_token", mockWeezeventHttpClient.getLastUrl());
@@ -49,7 +50,7 @@ public class TestWeezeventClient {
 	}
 	
 	@Test
-	public void testGetWeezeventClientLoginAndGet() {
+	public void testGetWeezeventClientLoginAndGet() throws WeezeventException {
 		weezeventClient.login("username", "password");
 		weezeventClient.get("/somewhere", Object.class);
 		
@@ -62,7 +63,7 @@ public class TestWeezeventClient {
 	}
 	
 	@Test
-	public void testGetWeezeventClientLoginAndGetAndLogout() {
+	public void testGetWeezeventClientLoginAndGetAndLogout() throws WeezeventException {
 		weezeventClient.login("username", "password");
 		weezeventClient.get("/somewhere", Object.class);
 		weezeventClient.logout();
@@ -80,7 +81,7 @@ public class TestWeezeventClient {
 	}
 	
 	@Test
-	public void testGetWeezeventClientLoginAndGetAndLogoutAndClose() {
+	public void testGetWeezeventClientLoginAndGetAndLogoutAndClose() throws WeezeventException {
 		weezeventClient.login("username", "password");
 		weezeventClient.get("/somewhere", Object.class);
 		weezeventClient.logout();
@@ -90,7 +91,7 @@ public class TestWeezeventClient {
 	}
 	
 	@Test
-	public void testGetAnonymously() {
+	public void testGetAnonymously() throws WeezeventException {
 		weezeventClient.getAnonymously("/mypath1", Object.class);
 		
 		Assert.assertEquals(WeezeventClient.DEFAULT_WEEZEVENT_URL + "/mypath1", mockWeezeventHttpClient.getLastUrl());
@@ -98,7 +99,7 @@ public class TestWeezeventClient {
 	}
 	
 	@Test
-	public void testGet() {
+	public void testGet() throws WeezeventException {
 		weezeventClient.get("/mypath2", Object.class);
 		
 		Assert.assertEquals(WeezeventClient.DEFAULT_WEEZEVENT_URL + "/mypath2", mockWeezeventHttpClient.getLastUrl());
@@ -108,11 +109,11 @@ public class TestWeezeventClient {
 	}
 	
 	@Test
-	public void testGetWithParams() {
+	public void testGetWithParams() throws WeezeventException {
 		String paramKey = "myparam1";
 		String paramValue = "myvalue1";
 		
-		HashMap<String, Object> params = new HashMap<String, Object>();
+		HashMap<String, String> params = new HashMap<String, String>();
 		params.put(paramKey, paramValue);
 		weezeventClient.get("/mypath3", params, Object.class);
 		
@@ -125,11 +126,11 @@ public class TestWeezeventClient {
 	}
 	
 	@Test
-	public void testPostWithParams() {
+	public void testPostWithParams() throws WeezeventException {
 		String paramKey = "myparam2";
 		String paramValue = "myvalue2";
 		
-		HashMap<String, Object> params = new HashMap<String, Object>();
+		HashMap<String, String> params = new HashMap<String, String>();
 		params.put(paramKey, paramValue);
 		weezeventClient.post("/mypath4", params, Object.class);
 		
