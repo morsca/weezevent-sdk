@@ -89,4 +89,3 @@ weezeventParticipantsRequest.setTicketIds(Arrays.asList(1121223L));
 
 WeezeventParticipantsResponse participantsResponse = service.getParticipants(weezeventParticipantsRequest);
 //do some stuff...
-```
