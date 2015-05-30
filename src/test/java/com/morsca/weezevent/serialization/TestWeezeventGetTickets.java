@@ -2,6 +2,7 @@ package com.morsca.weezevent.serialization;
 
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,7 +22,7 @@ public class TestWeezeventGetTickets {
 	@Before
 	public void before() {
 		mapper.setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
-		mapper.setDateFormat(new SimpleDateFormat("yyy-MM-dd HH:mm:ss"));
+		mapper.setDateFormat(new SimpleDateFormat("yyy-MM-dd HH:mm:ss", Locale.ROOT));
 	}
 	
 	@Test
