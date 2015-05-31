@@ -2,6 +2,7 @@ package com.morsca.weezevent.serialization;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import org.junit.Assert;
@@ -29,6 +30,10 @@ public class TestWeezeventGetEventDetails {
 		WeezeventEventDetailsResponse eventDetailsResponse = mapper.readValue(ClassLoader.getSystemResourceAsStream("getEventDetails.json"), WeezeventEventDetailsResponse.class);
 		
 		Assert.assertNotNull(eventDetailsResponse);
-		Assert.assertEquals(dateFormat.parse("27/05/2013 18:02:16"), eventDetailsResponse.getLastUpdate());
+		Date date1 = dateFormat.parse("27/05/2013 18:02:16");
+		Date date2 = eventDetailsResponse.getLastUpdate();
+		System.out.println("date1 : " + date1 + "; time : " + date1.getTime());
+		System.out.println("date2 : " + date2 + "; time : " + date2.getTime());
+		Assert.assertEquals(date1, date2);
 	}
 }
